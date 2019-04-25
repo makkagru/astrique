@@ -1,0 +1,76 @@
+#home .App-header {
+  background-image: url('../../img/bg.webp');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top center;
+  height: 500px;
+  width: 100%;
+}
+
+#home .nav-link {
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#home .navbar .nav-link{
+  color: #333333;
+}
+
+#home .navbar .nav-link:hover{
+  color: #666666;
+}
+
+#home .navbar-light .navbar-toggler {
+  color: transparent;
+  border: none;
+}
+
+#home .App-routing li{
+  padding: 10px 20px;
+  list-style: none;
+}
+
+#home main {
+  padding-top: 40px;
+}
+
+#home .listing-block-container {
+  margin-bottom: 30px;
+}
+
+#home .listing-block-container p {
+  margin: 10px 0 0 0;
+  font-weight: 700;
+}
+
+#home .listing-block-container em {
+  font-weight: 100;
+}
+
+#home .listing-block {
+  height: 400px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 5px;
+}
+
+#home .filter {
+  margin-bottom: 15px;
+}
+
+#home .filter a {
+  color: #666666;
+}
+
+#home .filter a:hover {
+  color: #888888;
+}
+
+#home h2 {
+  font-weight: 100
+}

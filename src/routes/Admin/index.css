@@ -1,0 +1,47 @@
+#admin .App-header {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top center;
+  height: 100px;
+  width: 100%;
+}
+
+#admin .navbar .nav-link{
+  color: #333333;
+}
+
+#admin .navbar .nav-link:hover{
+  color: #666666;
+}
+
+#admin .navbar-light .navbar-toggler {
+  color: transparent;
+  border: none;
+}
+
+#admin .App-routing li{
+  padding: 10px 20px;
+  list-style: none;
+}
+
+#admin main {
+  padding-top: 40px;
+}
+
+#admin .listing-block {
+  cursor: pointer;
+  height: 130px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+#admin .filter {
+  margin-bottom: 30px;
+}
+
+#admin .filter a {
+  color: #666666;
+}
+#admin .filter a:hover {
+  color: #888888;
+}
