@@ -1,6 +1,6 @@
 export default class FetchApi {
   static getUrl() {
-    return 'http://localhost:3001';
+    return 'http://localhost:3030';
   }
 
   static getToken() {
@@ -80,6 +80,7 @@ export default class FetchApi {
       body
     };
 
+    console.log(11);
     return await fetch(`${FetchApi.getUrl()}/media`, myInit).then(res => {
       return res.json().
         then(json => {
