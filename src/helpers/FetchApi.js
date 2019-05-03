@@ -80,8 +80,7 @@ export default class FetchApi {
       body
     };
 
-    console.log(11);
-    return await fetch(`${FetchApi.getUrl()}/media`, myInit).then(res => {
+    return await fetch(`${FetchApi.getUrl()}/api/media/upload`, myInit).then(res => {
       return res.json().
         then(json => {
           if (res.status >= 200 && res.status < 300) {

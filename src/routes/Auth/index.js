@@ -19,7 +19,7 @@ class AuthRoute extends React.Component {
   async login(evt) {
     evt.preventDefault();
     try {
-      const response = await FetchApi.post('/auth/login', {username: this.state.username, password: this.state.password});
+      const response = await FetchApi.post('/api/auth/login', {user: {userName: this.state.username, password: this.state.password}});
       if (response.data.success) {
         FetchApi.setToken(response.data.token);
         this.setState({loggedIn: true});

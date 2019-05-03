@@ -42,12 +42,13 @@ class AdminRoute extends React.Component {
   async addListing(evt) {
     evt.preventDefault();
     try {
-      if(!this.state.newListingPhoto.name) {
-        return;
-      }
-      const response = await FetchApi.upload({photo: this.state.newListingPhoto});
-      const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, author: this.state.newListingAuthor, photo: response.data.data.objectId}});
-      this.getListings();
+      // if(!this.state.newListingPhoto.name) {
+      //   return;
+      // }
+      const response = await FetchApi.upload({image: this.state.newListingPhoto});
+      console.log(response)
+      // const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, author: this.state.newListingAuthor, photo: response.data.data.objectId}});
+      // this.getListings();
     } catch (e) {
       console.error(e);
     }
@@ -57,7 +58,7 @@ class AdminRoute extends React.Component {
     evt.preventDefault();
     try {
       if(this.state.editListingPhoto.name) {
-        const response = await FetchApi.upload({photo: this.state.editListingPhoto});
+        const response = await FetchApi.upload({image: this.state.editListingPhoto});
         const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, author: this.state.editListingAuthor, photo: response.data.data.objectId}});
       } else {
         const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, author: this.state.editListingAuthor}});
