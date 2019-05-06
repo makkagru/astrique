@@ -13,17 +13,19 @@ class AdminRoute extends React.Component {
       isOpen: false,
       listings: [],
       collections: [],
+      author: [],
       selected: [],
       dropdownOpen: false,
       loggedIn: true,
       newListingName: '',
-      newListingAuthor: '',
+      newListingCollectionId: '',
+      newListingAuthorId: '',
       newListingPhoto: {},
       editListingName: '',
       editListingAuthor: '',
       editListingPhoto: {},
       collectionName: '',
-      collectionAuthor: ''
+      authorName: ''
     }
   }
 
@@ -31,6 +33,7 @@ class AdminRoute extends React.Component {
     this.checkLogin();
     this.getListings();
     this.getCollections();
+    this.getAuthors();
   }
 
   checkLogin() {
@@ -42,13 +45,13 @@ class AdminRoute extends React.Component {
   async addListing(evt) {
     evt.preventDefault();
     try {
-      // if(!this.state.newListingPhoto.name) {
-      //   return;
-      // }
+      if(!this.state.newListingPhoto.name) {
+        return;
+      }
       const response = await FetchApi.upload({image: this.state.newListingPhoto});
-      console.log(response)
-      // const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, author: this.state.newListingAuthor, photo: response.data.data.objectId}});
-      // this.getListings();
+      console.log(response);
+      const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, authorId: this.state.newListingAuthorId, collectionId: this.state.newListingCollectionId, photo: response.data.data.id}});
+      this.getListings();
     } catch (e) {
       console.error(e);
     }
@@ -87,6 +90,15 @@ class AdminRoute extends React.Component {
     }
   }
 
+  async getAuthors() {
+    try {
+      const authors = await FetchApi.get('/api/authors');
+      this.setState({authors: authors.data.data})
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   async removeItems() {
     try {
       for (let item of this.state.selected) {
@@ -94,6 +106,7 @@ class AdminRoute extends React.Component {
       }
       this.getCollections();
       this.getListings();
+      this.getAuthors();
     } catch (e) {
       console.log(e);
     }
@@ -102,9 +115,19 @@ class AdminRoute extends React.Component {
   async addCollection(evt) {
     evt.preventDefault();
     try {
-      await FetchApi.post('/api/collections', {collection: {name: this.state.collectionName, author: this.state.collectionAuthor}});
+      await FetchApi.post('/api/collections', {collection: {name: this.state.collectionName}});
       this.getCollections();
     } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async addAuthor(evt) {
+    try {
+      await FetchApi.post('/api/authors', {author: {name: this.state.authorName}});
+      this.getAuthors();
+    }
+    catch(e) {
       console.error(e);
     }
   }
@@ -221,7 +244,13 @@ class AdminRoute extends React.Component {
                   <FormGroup row>
                     <Label for="author" sm={2}>Author</Label>
                     <Col sm={10}>
-                      <Input type="text" name="author" id="author" placeholder="Listing author" value={this.state.newListingAuthor} onChange={(evt) => this.setState({newListingAuthor: evt.target.value})}/>
+                      <Input type="text" name="author" id="author" placeholder="Listing author id" value={this.state.newListingAuthorId} onChange={(evt) => this.setState({newListingAuthorId: evt.target.value})}/>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <Label for="author" sm={2}>Collection</Label>
+                    <Col sm={10}>
+                      <Input type="text" name="collection" id="collection" placeholder="Listing collection id" value={this.state.newListingCollectionId} onChange={(evt) => this.setState({newListingCollectionId: evt.target.value})}/>
                     </Col>
                   </FormGroup>
                   <FormGroup row>
@@ -232,7 +261,7 @@ class AdminRoute extends React.Component {
                   </FormGroup>
                   <FormGroup check row>
                     <Col sm={{ size: 10, offset: 2 }}>
-                      <Button disabled={!this.state.newListingName || !this.state.newListingAuthor || !this.state.newListingPhoto.name}>Submit</Button>
+                      <Button disabled={!this.state.newListingName || !this.state.newListingAuthorId || !this.state.newListingCollectionId || !this.state.newListingPhoto.name}>Submit</Button>
                     </Col>
                   </FormGroup>
                 </Form>
@@ -269,21 +298,21 @@ class AdminRoute extends React.Component {
                 </Form>
               </div>
             )}
-            <div style={{marginTop: '100px'}}>
-              <h1>
-                Collections
-              </h1>
-              <Row>
-                {this.state.collections.map((el, index) => (
-                  <Col xs="4" md="2" key={el.id}>
-                    <div style={{border: '3px solid blue', padding: '20px'}}>
-                      <p>{el.name}</p>
-                      <em>{el.listings.length} items</em>
-                    </div>
-                  </Col>
-                ))}
-              </Row>
-            </div>
+            {/* <div style={{marginTop: '100px'}}> */}
+            {/*   <h1> */}
+            {/*     Collections */}
+            {/*   </h1> */}
+            {/*   <Row> */}
+            {/*     {this.state.collections.map((el, index) => ( */}
+            {/*       <Col xs="4" md="2" key={el.id}> */}
+            {/*         <div style={{border: '3px solid blue', padding: '20px'}}> */}
+            {/*           <p>{el.name}</p> */}
+            {/*           <em>{el.listings.length} items</em> */}
+            {/*         </div> */}
+            {/*       </Col> */}
+            {/*     ))} */}
+            {/*   </Row> */}
+            {/* </div> */}
             <div style={{marginTop: '100px'}}>
               <h1>
                 Add new collection
@@ -295,15 +324,27 @@ class AdminRoute extends React.Component {
                     <Input type="text" name="collectionname" id="collectionname" placeholder="Collection name" value={this.state.collectionName} onChange={(evt) => this.setState({collectionName: evt.target.value})}/>
                   </Col>
                 </FormGroup>
+                <FormGroup check row>
+                  <Col sm={{ size: 10, offset: 2 }}>
+                    <Button disabled={!this.state.collectionName}>Submit</Button>
+                  </Col>
+                </FormGroup>
+              </Form>
+            </div>
+            <div style={{marginTop: '100px'}}>
+              <h1>
+                Add new author
+              </h1>
+              <Form onSubmit={(evt) => this.addAuthor(evt)}>
                 <FormGroup row>
-                  <Label for="author" sm={2}>Author</Label>
+                  <Label for="editname" sm={2}>Name</Label>
                   <Col sm={10}>
-                    <Input type="text" name="collectionauthor" id="collectionName" placeholder="Collection author" value={this.state.collectionAuthor} onChange={(evt) => this.setState({collectionAuthor: evt.target.value})}/>
+                    <Input type="text" name="authorname" id="authorname" placeholder="Author name" value={this.state.authorName} onChange={(evt) => this.setState({authorName: evt.target.value})}/>
                   </Col>
                 </FormGroup>
                 <FormGroup check row>
                   <Col sm={{ size: 10, offset: 2 }}>
-                    <Button disabled={!this.state.collectionName || !this.state.collectionAuthor}>Submit</Button>
+                    <Button disabled={!this.state.authorName}>Submit</Button>
                   </Col>
                 </FormGroup>
               </Form>

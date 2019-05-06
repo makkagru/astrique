@@ -26,6 +26,7 @@ class HomeRoute extends React.Component {
   }
 
   getListings = async (evt, selectedCollection = {}, author = {}) => {
+    console.log(selectedCollection.id);
     if (evt) evt.preventDefault();
     this.setState({loading: true});
     try {
@@ -35,9 +36,9 @@ class HomeRoute extends React.Component {
       }
       if (author) {
         if(selectedCollection.id) {
-          url = `${url}&author=${author.id}`
+          url = `${url}&authorId=${author.id}`
         } else {
-          url = `${url}?author=${author.id}`
+          url = `${url}?authorId=${author.id}`
         }
       }
 
