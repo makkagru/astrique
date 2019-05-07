@@ -34,7 +34,7 @@ class HomeRoute extends React.Component {
       if (selectedCollection.id) {
         url = `${url}?collectionId=${selectedCollection.id}`
       }
-      if (author) {
+      if (author.id) {
         if(selectedCollection.id) {
           url = `${url}&authorId=${author.id}`
         } else {
@@ -175,7 +175,6 @@ class HomeRoute extends React.Component {
                     <div className={"listing-block-container"}>
                       <div style={{backgroundImage: `url(${FetchApi.getUrl()}/media/${el.photo})`}} className="listing-block"></div>
                       <div>
-                        {console.log(el)}
                         <p>
                           {el.name}
                         </p>

@@ -13,7 +13,7 @@ class AdminRoute extends React.Component {
       isOpen: false,
       listings: [],
       collections: [],
-      author: [],
+      authors: [],
       selected: [],
       dropdownOpen: false,
       loggedIn: true,
@@ -49,7 +49,6 @@ class AdminRoute extends React.Component {
         return;
       }
       const response = await FetchApi.upload({image: this.state.newListingPhoto});
-      console.log(response);
       const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, authorId: this.state.newListingAuthorId, collectionId: this.state.newListingCollectionId, photo: response.data.data.id}});
       this.getListings();
     } catch (e) {
@@ -62,7 +61,7 @@ class AdminRoute extends React.Component {
     try {
       if(this.state.editListingPhoto.name) {
         const response = await FetchApi.upload({image: this.state.editListingPhoto});
-        const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, author: this.state.editListingAuthor, photo: response.data.data.objectId}});
+        const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, author: this.state.editListingAuthor, photo: response.data.data.id}});
       } else {
         const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, author: this.state.editListingAuthor}});
       }
@@ -203,7 +202,9 @@ class AdminRoute extends React.Component {
             <Row>
               {this.state.listings.map((el, index) => (
                 <Col xs="4" md="2" key={el.id}>
-                  <div style={{backgroundImage: `url(${FetchApi.getUrl()}/media/${el.photo})`, border: this.state.selected.indexOf(el.id) > -1 ? '3px solid red' : 'none'}} className="listing-block" onClick={() => this.selectItem(el.id)}></div>
+                  {console.log(el)}
+                  <div style={{backgroundImage: `url(${FetchApi.getUrl()}/api/media/${el.photo})`, border: this.state.selected.indexOf(el.id) > -1 ? '3px solid red' : 'none'}} className="listing-block" onClick={() => this.selectItem(el.id)}></div>
+                  <div>{el.name}</div>
                 </Col>
               ))}
             </Row>
@@ -220,7 +221,7 @@ class AdminRoute extends React.Component {
                       </DropdownToggle>
                       <DropdownMenu>
                         {this.state.collections.map(el => (
-                            <DropdownItem onClick={() => this.addToCollection(el.id)} key={el.id}>{el.name}</DropdownItem>
+                            <DropdownItem onClick={() => this.addToCollection(el.id)} key={el.id}>{el.col.name}</DropdownItem>
                           )
                         )}
                       </DropdownMenu>
@@ -244,13 +245,33 @@ class AdminRoute extends React.Component {
                   <FormGroup row>
                     <Label for="author" sm={2}>Author</Label>
                     <Col sm={10}>
-                      <Input type="text" name="author" id="author" placeholder="Listing author id" value={this.state.newListingAuthorId} onChange={(evt) => this.setState({newListingAuthorId: evt.target.value})}/>
+                      <ButtonDropdown isOpen={this.state.newListingAuthorDropdownOpen} toggle={() => this.setState({newListingAuthorDropdownOpen: !this.state.newListingAuthorDropdownOpen})}>
+                        <DropdownToggle caret>
+                          Author
+                        </DropdownToggle>
+                        <DropdownMenu>
+                          {this.state.authors.map(el => (
+                              <DropdownItem onClick={() => this.setState({newListingAuthorId: el.id})} key={el.id}>{el.name}</DropdownItem>
+                            )
+                          )}
+                        </DropdownMenu>
+                      </ButtonDropdown>
                     </Col>
                   </FormGroup>
                   <FormGroup row>
                     <Label for="author" sm={2}>Collection</Label>
                     <Col sm={10}>
-                      <Input type="text" name="collection" id="collection" placeholder="Listing collection id" value={this.state.newListingCollectionId} onChange={(evt) => this.setState({newListingCollectionId: evt.target.value})}/>
+                      <ButtonDropdown isOpen={this.state.newListingCollectionDropdownOpen} toggle={() => this.setState({newListingCollectionDropdownOpen: !this.state.newListingCollectionDropdownOpen})}>
+                        <DropdownToggle caret>
+                          Collection
+                        </DropdownToggle>
+                        <DropdownMenu>
+                          {this.state.collections.map(el => (
+                              <DropdownItem onClick={() => this.setState({newListingCollectionId: el.id})} key={el.id}>{el.name}</DropdownItem>
+                            )
+                          )}
+                        </DropdownMenu>
+                      </ButtonDropdown>
                     </Col>
                   </FormGroup>
                   <FormGroup row>
