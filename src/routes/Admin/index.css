@@ -45,3 +45,7 @@
 #admin .filter a:hover {
   color: #888888;
 }
+
+.listingName {
+  font-size: 12px;
+}

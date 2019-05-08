@@ -19,6 +19,8 @@ class AdminRoute extends React.Component {
       loggedIn: true,
       newListingName: '',
       newListingCollectionId: '',
+      newListingCollection: {},
+      newListingAuthor: {},
       newListingAuthorId: '',
       newListingPhoto: {},
       editListingName: '',
@@ -49,7 +51,7 @@ class AdminRoute extends React.Component {
         return;
       }
       const response = await FetchApi.upload({image: this.state.newListingPhoto});
-      const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, authorId: this.state.newListingAuthorId, collectionId: this.state.newListingCollectionId, photo: response.data.data.id}});
+      const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, author: this.state.newListingCollection, photo: response.data.data.id}});
       this.getListings();
     } catch (e) {
       console.error(e);
@@ -205,6 +207,7 @@ class AdminRoute extends React.Component {
                   {console.log(el)}
                   <div style={{backgroundImage: `url(${FetchApi.getUrl()}/api/media/${el.photo})`, border: this.state.selected.indexOf(el.id) > -1 ? '3px solid red' : 'none'}} className="listing-block" onClick={() => this.selectItem(el.id)}></div>
                   <div>{el.name}</div>
+                  <p className="listingName">By {el.author.name}</p>
                 </Col>
               ))}
             </Row>
@@ -221,7 +224,7 @@ class AdminRoute extends React.Component {
                       </DropdownToggle>
                       <DropdownMenu>
                         {this.state.collections.map(el => (
-                            <DropdownItem onClick={() => this.addToCollection(el.id)} key={el.id}>{el.col.name}</DropdownItem>
+                            <DropdownItem onClick={() => this.addToCollection(el.id)} key={el.id}>{el.name}</DropdownItem>
                           )
                         )}
                       </DropdownMenu>
@@ -230,6 +233,30 @@ class AdminRoute extends React.Component {
                 </Col>
               </Row>
             ) : null}
+            {this.state.collections.map(el => (
+              <Row>
+                <Col key={el.id}>
+                  <h1 style={{marginTop: '40px'}}>
+                    Your Collections
+                  </h1>
+                  <div>
+                    {el.name}
+                  </div>                  
+                </Col>
+              </Row>
+              ))}
+            {this.state.authors.map(el => (
+              <Row >
+                <Col key={el.id}>
+                  <h1 style={{marginTop: '40px'}}>
+                    Authors
+                  </h1>
+                  <div>
+                    {el.name}
+                  </div>
+                </Col>
+              </Row>
+              ))}
             {this.state.selected.length !== 1 ? (
               <div style={{marginTop: '100px'}}>
                 <h1>
