@@ -51,7 +51,7 @@ class AdminRoute extends React.Component {
         return;
       }
       const response = await FetchApi.upload({image: this.state.newListingPhoto});
-      const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, author: this.state.newListingAuthor, col: this.state.newListingCollection, photo: response.data.data.id}});
+      const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, author: this.state.newListingAuthor, collection: this.state.newListingCollection, photo: response.data.data.id}});
       this.getListings();
     } catch (e) {
       console.error(e);
@@ -179,7 +179,11 @@ class AdminRoute extends React.Component {
 
   render() {
     return (
+       
       <section id="admin">
+        <Button type="btn" href="localhost:3000">
+          Home
+        </Button>
         <header className="App-header">
           <Navbar light expand="md">
             <NavbarBrand>
@@ -207,8 +211,7 @@ class AdminRoute extends React.Component {
                 <Col xs="4" md="2" key={el.id}>
                   <div style={{backgroundImage: `url(${FetchApi.getUrl()}/api/media/${el.photo})`, border: this.state.selected.indexOf(el.id) > -1 ? '3px solid red' : 'none'}} className="listing-block" onClick={() => this.selectItem(el.id)}></div>
                   <div>{el.name}</div>
-                  <p className="listingName">By {el.author.name}</p>
-                  <p>collection - {el.col.name}</p>
+                  <p style={{'margin-buttom': '40px'}} className="listingName">By {el.author.name}</p>
                 </Col>
               ))}
             </Row>
@@ -255,7 +258,7 @@ class AdminRoute extends React.Component {
                         </DropdownToggle>
                         <DropdownMenu>
                           {this.state.authors.map(el => (
-                              <DropdownItem onClick={() => this.setState({newListingAuthorId: el.id})} key={el.id}>{el.name}</DropdownItem>
+                              <DropdownItem onClick={() => this.setState({newListingAuthor: el})} key={el.id}>{el.name}</DropdownItem>
                             )
                           )}
                         </DropdownMenu>
@@ -263,7 +266,7 @@ class AdminRoute extends React.Component {
                     </Col>
                   </FormGroup>
                   <FormGroup row>
-                    <Label for="author" sm={2}>Collection</Label>
+                    <Label for="collection" sm={2}>Collection</Label>
                     <Col sm={10}>
                       <ButtonDropdown isOpen={this.state.newListingCollectionDropdownOpen} toggle={() => this.setState({newListingCollectionDropdownOpen: !this.state.newListingCollectionDropdownOpen})}>
                         <DropdownToggle caret>
@@ -271,7 +274,8 @@ class AdminRoute extends React.Component {
                         </DropdownToggle>
                         <DropdownMenu>
                           {this.state.collections.map(el => (
-                              <DropdownItem onClick={() => this.setState({newListingCollectionId: el.id})} key={el.id}>{el.name}</DropdownItem>
+
+                              <DropdownItem onClick={() => this.setState({newListingCollection: el})} key={el.id}>{el.name}</DropdownItem>
                             )
                           )}
                         </DropdownMenu>
@@ -286,7 +290,7 @@ class AdminRoute extends React.Component {
                   </FormGroup>
                   <FormGroup check row>
                     <Col sm={{ size: 10, offset: 2 }}>
-                      <Button disabled={!this.state.newListingName || !this.state.newListingAuthorId || !this.state.newListingCollectionId || !this.state.newListingPhoto.name}>Submit</Button>
+                      <Button disabled={!this.state.newListingName || !this.state.newListingAuthor || !this.state.newListingCollection || !this.state.newListingPhoto.name}>Submit</Button>
                     </Col>
                   </FormGroup>
                 </Form>
