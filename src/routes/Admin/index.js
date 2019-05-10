@@ -51,7 +51,7 @@ class AdminRoute extends React.Component {
         return;
       }
       const response = await FetchApi.upload({image: this.state.newListingPhoto});
-      const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, author: this.state.newListingCollection, photo: response.data.data.id}});
+      const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, author: this.state.newListingAuthor, col: this.state.newListingCollection, photo: response.data.data.id}});
       this.getListings();
     } catch (e) {
       console.error(e);
@@ -136,9 +136,10 @@ class AdminRoute extends React.Component {
   async addToCollection(collectionId) {
     try {
       for (let item of this.state.selected) {
-        await FetchApi.patch(`/api/collections/${collectionId}`, {listingId: item});
+        await FetchApi.patch(`/api/listings/${item}`, {collection: {id: collectionId}});
       }
       this.getCollections();
+      this.getListings();
     } catch (e) {
       console.log(e);
     }
@@ -204,10 +205,10 @@ class AdminRoute extends React.Component {
             <Row>
               {this.state.listings.map((el, index) => (
                 <Col xs="4" md="2" key={el.id}>
-                  {console.log(el)}
                   <div style={{backgroundImage: `url(${FetchApi.getUrl()}/api/media/${el.photo})`, border: this.state.selected.indexOf(el.id) > -1 ? '3px solid red' : 'none'}} className="listing-block" onClick={() => this.selectItem(el.id)}></div>
                   <div>{el.name}</div>
                   <p className="listingName">By {el.author.name}</p>
+                  <p>collection - {el.col.name}</p>
                 </Col>
               ))}
             </Row>
@@ -233,31 +234,7 @@ class AdminRoute extends React.Component {
                 </Col>
               </Row>
             ) : null}
-            {this.state.collections.map(el => (
-              <Row>
-                <Col key={el.id}>
-                  <h1 style={{marginTop: '40px'}}>
-                    Your Collections
-                  </h1>
-                  <div>
-                    {el.name}
-                  </div>                  
-                </Col>
-              </Row>
-              ))}
-            {this.state.authors.map(el => (
-              <Row >
-                <Col key={el.id}>
-                  <h1 style={{marginTop: '40px'}}>
-                    Authors
-                  </h1>
-                  <div>
-                    {el.name}
-                  </div>
-                </Col>
-              </Row>
-              ))}
-            {this.state.selected.length !== 1 ? (
+             {this.state.selected.length !== 1 ? (
               <div style={{marginTop: '100px'}}>
                 <h1>
                   Add new listing
@@ -346,6 +323,33 @@ class AdminRoute extends React.Component {
                 </Form>
               </div>
             )}
+              <Row>
+                <Col>
+                  <h1 style={{marginTop: '40px'}}>
+                    Your Collections
+                  </h1>
+                  {this.state.collections.map(el => (
+                  <div key={el.id}>
+                    {el.name}
+                  </div>                  
+                  ))}
+                </Col>
+              </Row>
+              <Row >
+                <Col>
+                  <h1 style={{marginTop: '40px'}}>
+                    Authors
+                  </h1>
+                  {this.state.authors.map(el => (
+                    <div key={el.id}>
+                      {el.name}
+                    </div>
+                  ))}
+                </Col>
+              </Row>
+              
+           
+            
             {/* <div style={{marginTop: '100px'}}> */}
             {/*   <h1> */}
             {/*     Collections */}
