@@ -24,7 +24,7 @@ class AdminRoute extends React.Component {
       newListingAuthorId: '',
       newListingPhoto: {},
       editListingName: '',
-      editListingAuthor: '',
+      editListingAuthorName: '',
       editListingPhoto: {},
       collectionName: '',
       authorName: ''
@@ -63,9 +63,9 @@ class AdminRoute extends React.Component {
     try {
       if(this.state.editListingPhoto.name) {
         const response = await FetchApi.upload({image: this.state.editListingPhoto});
-        const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, author: this.state.editListingAuthor, photo: response.data.data.id}});
+        const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, authorName: this.state.editListingAuthorName, photo: response.data.data.id}});
       } else {
-        const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, author: this.state.editListingAuthor}});
+        const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, authorName: this.state.editListingAuthorName}});
       }
       this.getListings();
     } catch (e) {
@@ -154,7 +154,7 @@ class AdminRoute extends React.Component {
           if (selected.length == 1) {
             this.setState({
               editListingName: listing.name,
-              editListingAuthor: listing.author,
+              editListingAuthorName: listing.author.name,
             });
           }
         } else {
@@ -162,7 +162,7 @@ class AdminRoute extends React.Component {
           if (selected.length == 1) {
             this.setState({
               editListingName: listing.name,
-              editListingAuthor: listing.author,
+              editListingAuthorName: listing.author.name,
             });
           }
         }
@@ -181,7 +181,9 @@ class AdminRoute extends React.Component {
     return (
        
       <section id="admin">
-        <Button type="btn" href="localhost:3000">
+        <Button onClick={() => {
+          this.props.history.push('/')
+          }} type="btn">
           Home
         </Button>
         <header className="App-header">
@@ -310,7 +312,7 @@ class AdminRoute extends React.Component {
                   <FormGroup row>
                     <Label for="author" sm={2}>Author</Label>
                     <Col sm={10}>
-                      <Input type="text" name="editauthor" id="editauthor" placeholder="Listing author" value={this.state.editListingAuthor} onChange={(evt) => this.setState({editListingAuthor: evt.target.value})}/>
+                      <Input type="text" name="editauthor" id="editauthor" placeholder="Listing author" value={this.state.editListingAuthorName} onChange={(evt) => this.setState({editListingAuthorName: evt.target.value})}/>
                     </Col>
                   </FormGroup>
                   <FormGroup row>
@@ -321,7 +323,7 @@ class AdminRoute extends React.Component {
                   </FormGroup>
                   <FormGroup check row>
                     <Col sm={{ size: 10, offset: 2 }}>
-                      <Button disabled={!this.state.editListingName || !this.state.editListingAuthor}>Submit</Button>
+                      <Button disabled={!this.state.editListingName || !this.state.editListingAuthorName}>Submit</Button>
                     </Col>
                   </FormGroup>
                 </Form>
