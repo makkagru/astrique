@@ -169,6 +169,7 @@ class AdminRoute extends React.Component {
       }
     }
     this.setState({selected});
+    console.log(selected);
   }
 
   toggle() {
@@ -178,6 +179,7 @@ class AdminRoute extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     return (
        
       <section id="admin">
@@ -254,7 +256,7 @@ class AdminRoute extends React.Component {
                   <FormGroup row>
                     <Label for="author" sm={2}>Author</Label>
                     <Col sm={10}>
-                      <ButtonDropdown isOpen={this.state.newListingAuthorDropdownOpen} toggle={() => this.setState({newListingAuthorDropdownOpen: !this.state.newListingAuthorDropdownOpen})}>
+                      <ButtonDropdown isOpen={this.state.newListingAuthorDropdownOpen} toggle={() => this.setState({newListingAuthorDropdownOpen: !this.state.newListingAuthorDropdownOpen})}>   
                         <DropdownToggle caret>
                           Author
                         </DropdownToggle>
@@ -306,13 +308,23 @@ class AdminRoute extends React.Component {
                   <FormGroup row>
                     <Label for="editname" sm={2}>Name</Label>
                     <Col sm={10}>
-                      <Input type="text" name="editname" id="editname" placeholder="Listing name" value={this.state.editListingName} onChange={(evt) => this.setState({editListingName: evt.target.value})}/>
+                      <Input type="text" name="editname" id="editname" placeholder="New listing name"  onChange={(evt) => this.setState({editListingName: evt.target.value})}/>
                     </Col>
                   </FormGroup>
                   <FormGroup row>
                     <Label for="author" sm={2}>Author</Label>
                     <Col sm={10}>
-                      <Input type="text" name="editauthor" id="editauthor" placeholder="Listing author" value={this.state.editListingAuthorName} onChange={(evt) => this.setState({editListingAuthorName: evt.target.value})}/>
+                      <ButtonDropdown isOpen={this.state.newListingAuthorDropdownOpen} toggle={() => this.setState({newListingAuthorDropdownOpen: !this.state.newListingAuthorDropdownOpen})}>
+                        <DropdownToggle caret>
+                          Author
+                        </DropdownToggle>
+                        <DropdownMenu>
+                          {this.state.authors.map(el => (
+                              <DropdownItem onClick={() => this.setState({editListingAuthorName: el})} key={el.id}>{el.name}</DropdownItem>
+                            )
+                          )}
+                        </DropdownMenu>
+                      </ButtonDropdown>
                     </Col>
                   </FormGroup>
                   <FormGroup row>
@@ -323,7 +335,7 @@ class AdminRoute extends React.Component {
                   </FormGroup>
                   <FormGroup check row>
                     <Col sm={{ size: 10, offset: 2 }}>
-                      <Button disabled={!this.state.editListingName || !this.state.editListingAuthorName}>Submit</Button>
+                      <Button disabled={!this.state.editListingName || !this.state.editListingAuthorName || !this.state.editListingPhoto}>Submit</Button>
                     </Col>
                   </FormGroup>
                 </Form>
