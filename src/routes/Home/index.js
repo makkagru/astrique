@@ -11,12 +11,12 @@ class HomeRoute extends React.Component {
     this.state = {
       isOpen: false,
       selectedCollection: {},
-
       listings: [],
       collections: [],
       authors: [],
       selectedAuthor: {},
       loading: true,
+      itemListing: {}
     }
   }
 
@@ -111,7 +111,6 @@ class HomeRoute extends React.Component {
                   {this.state.collections.map(el => (
                       <NavItem>
                         <NavLink style={{color: this.state.selectedCollection.id == el.id ? 'black': '#999999'}} onClick={(evt)=>this.getListings(evt, el, {})}>{el.name}</NavLink>
-                        <em></em>
                       </NavItem>
                     )
                   )}
@@ -154,14 +153,17 @@ class HomeRoute extends React.Component {
               <Row>
                 
                 {this.state.listings.map((el, index) => (
-                  <Col xs="12" md="4" key={el.id}>
+                  <Col xs="6" md="4" lg="3" key={el.id}>
                     <div className={"listing-block-container"}>
-                      <div style={{backgroundImage: `url(${FetchApi.getUrl()}/api/media/${el.photo}`}} className="listing-block"></div>
+                      <div style={{backgroundImage: `url(${FetchApi.getUrl()}/api/media/${el.photo}?width=300`, backgroundSize: 'cover'}} className="listing-block"></div>
                       <div>
                         <p>
                           {el.name}
                         </p>
-                        <em>
+                        <em onClick={() => {
+                          this.setState({itemListing: el})
+                          return this.props.history.push('/item')}
+                          } style={{cursor: 'pointer'}}>
                           by {el.author.name}
                         </em>
                         <em>

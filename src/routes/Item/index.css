@@ -1,0 +1,47 @@
+.App-header {
+	font-size: small;
+	color: #606060;
+	text-align: center;
+
+}
+
+.menu-items {
+	font-size: 3px;
+}
+
+.buyBtn {
+	width: 140px; 
+	height: 32px;
+	font-size: 15px;
+	margin-top: 45px;
+	background-color: #181818;
+}
+
+.headerItem {
+	margin-left: 10px;
+}
+
+.slash {
+	color: #d5d5d5;
+}
+
+.headerItems {
+	padding-top: 19px;
+}
+
+.heartImg {
+	height: 18px;
+	width: 18px;
+}
+
+.likeBtn {
+}
+
+.followImg {
+	height: 18px;
+	width: 18px;
+}
+
+.followBtn {
+
+}

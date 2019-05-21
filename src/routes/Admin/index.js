@@ -27,7 +27,7 @@ class AdminRoute extends React.Component {
       editListingAuthorName: '',
       editListingPhoto: {},
       collectionName: '',
-      authorName: ''
+      authorName: '',
     }
   }
 
@@ -169,7 +169,6 @@ class AdminRoute extends React.Component {
       }
     }
     this.setState({selected});
-    console.log(selected);
   }
 
   toggle() {
@@ -179,9 +178,11 @@ class AdminRoute extends React.Component {
   }
 
   render() {
-    console.log(this.state)
+    {console.log(this.state)}
+    if(!this.state.loggedIn) {
+      return 'Error with authorization';
+    }
     return (
-       
       <section id="admin">
         <Button onClick={() => {
           this.props.history.push('/')
@@ -213,7 +214,7 @@ class AdminRoute extends React.Component {
             <Row>
               {this.state.listings.map((el, index) => (
                 <Col xs="4" md="2" key={el.id}>
-                  <div style={{backgroundImage: `url(${FetchApi.getUrl()}/api/media/${el.photo})`, border: this.state.selected.indexOf(el.id) > -1 ? '3px solid red' : 'none'}} className="listing-block" onClick={() => this.selectItem(el.id)}></div>
+                  <div style={{backgroundImage: `url(${FetchApi.getUrl()}/api/media/${el.photo}?width=200)`, border: this.state.selected.indexOf(el.id) > -1 ? '3px solid red' : 'none'}} className="listing-block" onClick={() => this.selectItem(el.id)}></div>
                   <div>{el.name}</div>
                   <p style={{'margin-buttom': '40px'}} className="listingName">By {el.author.name}</p>
                 </Col>
@@ -242,7 +243,7 @@ class AdminRoute extends React.Component {
               </Row>
             ) : null}
              {this.state.selected.length !== 1 ? (
-              <div style={{marginTop: '100px'}}>
+              <div className="addListing" style={{marginTop: '100px'}}>
                 <h1>
                   Add new listing
                 </h1>
@@ -300,7 +301,7 @@ class AdminRoute extends React.Component {
                 </Form>
               </div>
             ) : (
-              <div style={{marginTop: '100px'}}>
+              <div className="editListing" style={{marginTop: '100px'}}>
                 <h1>
                   Edit listing
                 </h1>

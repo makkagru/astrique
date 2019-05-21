@@ -1,13 +1,6 @@
-#admin .App-header {
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: top center;
-  height: 100px;
-  width: 100%;
-}
 
-#admin {
-  background-image: url('./background.jpg');
+.editListing {
+  background-image: url('./background2.jpg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100%;
