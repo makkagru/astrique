@@ -1,9 +1,8 @@
 import React from 'react';
 import FetchApi from '../../helpers/FetchApi';
 import './index.css';
-import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Navbar, NavbarBrand, Collapse, NavbarToggler, Nav, NavItem, NavLink, Container, Row, Col, Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Container, Row, Col, Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import { Redirect } from 'react-router';
 
 class AuthRoute extends React.Component {

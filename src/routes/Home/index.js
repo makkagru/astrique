@@ -3,7 +3,7 @@ import FetchApi from '../../helpers/FetchApi';
 import './index.css';
 import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Navbar, NavbarBrand, Collapse, NavbarToggler, Nav, NavItem, NavLink, Container, Button, Row, Col } from 'reactstrap';
+import { Navbar, NavbarBrand, Collapse, NavbarToggler, Nav, NavItem, NavLink, Container, Row, Col } from 'reactstrap';
 
 class HomeRoute extends React.Component {
    constructor(props) {
@@ -147,30 +147,38 @@ class HomeRoute extends React.Component {
             </Row>
             {this.state.loading ? (
                 <div style={{margin: '50px auto', textAlign: 'center', height: '500px'}}>
+                  <div className="spinner-grow" role="status">
+                    <span className="sr-only">Loading...</span>
+                  </div>
                 </div>
               ) : (
-
               <Row>
-                
                 {this.state.listings.map((el, index) => (
                   <Col xs="6" md="4" lg="3" key={el.id}>
                     <div className={"listing-block-container"}>
-                      <div style={{backgroundImage: `url(${FetchApi.getUrl()}/api/media/${el.photo}?width=300`, backgroundSize: 'cover'}} className="listing-block"></div>
+                      <div style={{backgroundImage: `url(${FetchApi.getUrl()}/api/media/${el.photo}?width=300`, backgroundSize: 'cover', cursor: 'pointer' }}
+                       className="listing-block" 
+                       onClick={() => { 
+                        this.props.history.push('/item', {item: el})
+                        }}
+                        ></div>
                       <div>
-                        <p>
+                        <p onClick={() => { 
+                        this.props.history.push('/item', {item: el})
+                        }}
+                        style={{cursor: 'pointer'}}>
                           {el.name}
                         </p>
-                        <em onClick={() => {
-                          this.setState({itemListing: el})
-                          return this.props.history.push('/item')}
-                          } style={{cursor: 'pointer'}}>
-                          by {el.author.name}
-                        </em>
+                        <p style={{marginTop: '1px'}}>
+                          ${el.value}
+                        </p>
                         <em>
+                          by {el.author.name}
                         </em>
                       </div>
                     </div>
                   </Col>
+                 
                 ))}
               </Row>
             )}

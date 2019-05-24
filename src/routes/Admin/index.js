@@ -3,7 +3,7 @@ import FetchApi from '../../helpers/FetchApi';
 import './index.css';
 import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Navbar, NavbarBrand, Collapse, NavbarToggler, Nav, NavItem, NavLink, Container, Row, Col, Button, Form, FormGroup, Input, Label, ButtonDropdown, DropdownMenu, DropdownToggle, DropdownItem } from 'reactstrap';
+import { Navbar, NavbarBrand, Collapse, NavbarToggler, Nav, Container, Row, Col, Button, Form, FormGroup, Input, Label, ButtonDropdown, DropdownMenu, DropdownToggle, DropdownItem } from 'reactstrap';
 import { Redirect } from 'react-router';
 
 class AdminRoute extends React.Component {
@@ -18,12 +18,14 @@ class AdminRoute extends React.Component {
       dropdownOpen: false,
       loggedIn: true,
       newListingName: '',
+      newListingValue: '',
       newListingCollectionId: '',
       newListingCollection: {},
       newListingAuthor: {},
       newListingAuthorId: '',
       newListingPhoto: {},
       editListingName: '',
+      editListingValue: '',
       editListingAuthorName: '',
       editListingPhoto: {},
       collectionName: '',
@@ -51,7 +53,7 @@ class AdminRoute extends React.Component {
         return;
       }
       const response = await FetchApi.upload({image: this.state.newListingPhoto});
-      const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, author: this.state.newListingAuthor, collection: this.state.newListingCollection, photo: response.data.data.id}});
+      const listing = await FetchApi.post('/api/listings', {listing: {name: this.state.newListingName, author: this.state.newListingAuthor, collection: this.state.newListingCollection, value: this.state.newListingValue, photo: response.data.data.id}});
       this.getListings();
     } catch (e) {
       console.error(e);
@@ -63,9 +65,9 @@ class AdminRoute extends React.Component {
     try {
       if(this.state.editListingPhoto.name) {
         const response = await FetchApi.upload({image: this.state.editListingPhoto});
-        const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, authorName: this.state.editListingAuthorName, photo: response.data.data.id}});
+        const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, value: this.state.editListingValue, authorName: this.state.editListingAuthorName, photo: response.data.data.id}});
       } else {
-        const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, authorName: this.state.editListingAuthorName}});
+        const listing = await FetchApi.put(`/api/listings/${this.state.selected[0]}`, {listing: {name: this.state.editListingName, value: this.state.editListingValue, authorName: this.state.editListingAuthorName}});
       }
       this.getListings();
     } catch (e) {
@@ -178,7 +180,6 @@ class AdminRoute extends React.Component {
   }
 
   render() {
-    {console.log(this.state)}
     if(!this.state.loggedIn) {
       return 'Error with authorization';
     }
@@ -287,6 +288,12 @@ class AdminRoute extends React.Component {
                       </ButtonDropdown>
                     </Col>
                   </FormGroup>
+                   <FormGroup row>
+                    <Label for="value" sm={2}>Value ($)</Label>
+                    <Col sm={10}>
+                      <Input type="number" name="value" id="value" placeholder="Listing value" value={this.state.newListingValue} onChange={(evt) => this.setState({newListingValue: evt.target.value})}/>
+                    </Col>
+                  </FormGroup>
                   <FormGroup row>
                     <Label for="photo" sm={2}>File</Label>
                     <Col sm={10}>
@@ -295,7 +302,7 @@ class AdminRoute extends React.Component {
                   </FormGroup>
                   <FormGroup check row>
                     <Col sm={{ size: 10, offset: 2 }}>
-                      <Button disabled={!this.state.newListingName || !this.state.newListingAuthor || !this.state.newListingCollection || !this.state.newListingPhoto.name}>Submit</Button>
+                      <Button disabled={!this.state.newListingName || !this.state.newListingAuthor || !this.state.newListingCollection || !this.state.newListingPhoto.name || !this.state.newListingValue}>Submit</Button>
                     </Col>
                   </FormGroup>
                 </Form>
@@ -309,7 +316,7 @@ class AdminRoute extends React.Component {
                   <FormGroup row>
                     <Label for="editname" sm={2}>Name</Label>
                     <Col sm={10}>
-                      <Input type="text" name="editname" id="editname" placeholder="New listing name"  onChange={(evt) => this.setState({editListingName: evt.target.value})}/>
+                      <Input type="number" name="editname" id="editname" placeholder="New listing name"  onChange={(evt) => this.setState({editListingName: evt.target.value})}/>
                     </Col>
                   </FormGroup>
                   <FormGroup row>
@@ -329,6 +336,12 @@ class AdminRoute extends React.Component {
                     </Col>
                   </FormGroup>
                   <FormGroup row>
+                    <Label for="editvalue" sm={2}>Value ($)</Label>
+                    <Col sm={10}>
+                      <Input type="text" name="editvalue" id="editvalue" placeholder="Listing value" value={this.state.editListingValue}  onChange={(evt) => this.setState({editListingValue: evt.target.value})}/>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
                     <Label for="photo" sm={2}>File</Label>
                     <Col sm={10}>
                       <Input type="file" name="photo" id="photo" onChange={(evt) => this.setState({editListingPhoto: evt.target.files[0]})}/>
@@ -336,7 +349,7 @@ class AdminRoute extends React.Component {
                   </FormGroup>
                   <FormGroup check row>
                     <Col sm={{ size: 10, offset: 2 }}>
-                      <Button disabled={!this.state.editListingName || !this.state.editListingAuthorName || !this.state.editListingPhoto}>Submit</Button>
+                      <Button disabled={!this.state.editListingName || !this.state.editListingAuthorName || !this.state.editListingPhoto || !this.state.editListingValue}>Submit</Button>
                     </Col>
                   </FormGroup>
                 </Form>
